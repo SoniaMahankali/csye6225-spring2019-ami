@@ -1,0 +1,271 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Metadata": {
+    "AWS::CloudFormation::Designer": {
+      "fc446ae9-582a-40af-918c-b9811ddbecdd": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 120,
+          "y": 70
+        },
+        "z": 0,
+        "embeds": [],
+        "isassociatedwith": [
+          "708670f7-f356-4f20-90ac-ec6afe689d2a"
+        ]
+      },
+      "c8d5d296-b039-4008-86e3-6b01a7a5a56b": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 316.99999925494194,
+          "y": 68.0000000745058
+        },
+        "z": 0,
+        "embeds": []
+      },
+      "ac83f734-e101-4020-9a2e-ac0b4874c1a3": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 460.99999925494194,
+          "y": 76.0000000745058
+        },
+        "z": 0,
+        "embeds": [],
+        "isassociatedwith": [
+          "abe4f18c-f263-473f-b512-a279ec919cd3",
+          "2ac4a04e-f54e-4743-8de5-fe73147f6add"
+        ]
+      },
+      "708670f7-f356-4f20-90ac-ec6afe689d2a": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": -4.00000074505806,
+          "y": 68.0000000745058
+        },
+        "z": 0,
+        "embeds": []
+      },
+      "2ac4a04e-f54e-4743-8de5-fe73147f6add": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 570,
+          "y": 30
+        },
+        "z": 0
+      },
+      "abe4f18c-f263-473f-b512-a279ec919cd3": {
+        "size": {
+          "width": 60,
+          "height": 60
+        },
+        "position": {
+          "x": 570,
+          "y": 130
+        },
+        "z": 0
+      },
+      "934d0cad-621b-4972-983a-8dfb5026e55a": {
+        "source": {
+          "id": "ac83f734-e101-4020-9a2e-ac0b4874c1a3"
+        },
+        "target": {
+          "id": "abe4f18c-f263-473f-b512-a279ec919cd3"
+        },
+        "z": 11
+      },
+      "77b537d1-52e9-44a9-8506-24245fa59f78": {
+        "source": {
+          "id": "ac83f734-e101-4020-9a2e-ac0b4874c1a3"
+        },
+        "target": {
+          "id": "2ac4a04e-f54e-4743-8de5-fe73147f6add"
+        },
+        "z": 12
+      }
+    }
+  },
+  "Resources": {
+    "EC2Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "ImageId": "ami-007612e42ac3217b4",
+        "InstanceType": "t2.micro",
+        "BlockDeviceMappings": [
+          {
+            "DeviceName": "/dev/sda1",
+            "Ebs": {
+              "DeleteOnTermination": true,
+              "VolumeSize": "20",
+              "VolumeType": "gp2"
+            }
+          }
+        ],
+        "SecurityGroupIds": [
+          {
+            "Ref": "EC2SecurityGroup"
+          }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFormation::Designer": {
+          "id": "fc446ae9-582a-40af-918c-b9811ddbecdd"
+        }
+      }
+    },
+    "DynamoDB": {
+      "Type": "AWS::DynamoDB::Table",
+      "Properties": {
+        "TableName": "csye6225",
+        "KeySchema": [
+          {
+            "AttributeName": "id",
+            "KeyType": "HASH"
+          }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFormation::Designer": {
+          "id": "c8d5d296-b039-4008-86e3-6b01a7a5a56b"
+        }
+      }
+    },
+    "RDSInstance": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "Engine": "MySQL",
+        "DBInstanceClass": "db.t2.medium",
+        "MultiAZ": false,
+        "DBInstanceIdentifier": "csye6225-spring2019",
+        "MasterUsername": "csye6225master",
+        "MasterUserPassword": "csye6225password",
+        "DBSubnetGroupName": "subnet-0d77d9a5cd46b314e",
+        "PubliclyAccessible": true,
+        "DBName": "csye6225",
+        "DBSecurityGroups": [
+          {
+            "Ref": "RDSDBSecurityGroup"
+          },
+          {
+            "Ref": "RDSEC2SecurityGroup"
+          }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFormation::Designer": {
+          "id": "ac83f734-e101-4020-9a2e-ac0b4874c1a3"
+        }
+      }
+    },
+    "EC2SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allow tcp ports to client host",
+        "VpcId": "vpc-092d4ebd485e58a4f",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 443,
+            "ToPort": 443,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 80,
+            "ToPort": 80,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 22,
+            "ToPort": 22,
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 443,
+            "ToPort": 443,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFormation::Designer": {
+          "id": "708670f7-f356-4f20-90ac-ec6afe689d2a"
+        }
+      }
+    },
+    "RDSEC2SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allow http to client host",
+        "VpcId": "vpc-03f50fe11f0a1338f",
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 3306,
+            "ToPort": 3306,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 3306,
+            "ToPort": 3306,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFormation::Designer": {
+          "id": "2ac4a04e-f54e-4743-8de5-fe73147f6add"
+        }
+      }
+    },
+    "RDSDBSecurityGroup": {
+      "Type": "AWS::RDS::DBSecurityGroup",
+      "Properties": {
+        "GroupDescription": "Ingress DB security for Amazon EC2 security group",
+        "DBSecurityGroupIngress": [
+          {
+            "CIDRIP": "0.0.0.0/0"
+          }
+        ]
+      },
+      "Metadata": {
+        "AWS::CloudFormation::Designer": {
+          "id": "abe4f18c-f263-473f-b512-a279ec919cd3"
+        }
+      }
+    }
+  }
+}
