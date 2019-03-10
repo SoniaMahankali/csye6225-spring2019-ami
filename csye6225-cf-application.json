@@ -177,6 +177,11 @@
         "DBSubnetGroupName": {
           "Ref": "RDSSubnetGroup"
         },
+        "VPCSecurityGroups" : [ 
+          {
+          "Ref": "DBServerSecurityGroup"
+          }
+        ],
         "Tags": [
           {
             "Key": "Name",
