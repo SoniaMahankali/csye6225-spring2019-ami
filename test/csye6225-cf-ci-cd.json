@@ -195,35 +195,6 @@
                     "id": "fbfa9c1c-dd3e-4173-a665-764376154a67"
                 }
             }
-        },
-        "CodeDeployServiceRole": {
-            "Type": "AWS::IAM::Role",
-            "Properties": {
-                "AssumeRolePolicyDocument": {
-                    "Version": "2012-10-17",
-                    "Statement": [
-                        {
-                            "Sid": "",
-                            "Effect": "Allow",
-                            "Principal": {
-                                "Service": [
-                                    "codedeploy.amazonaws.com"
-                                ]
-                            },
-                            "Action": "sts:AssumeRole"
-                        }
-                    ]
-                },
-                "ManagedPolicyArns": [
-                    "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
-                ],
-                "RoleName": "CodeDeployServiceRole"
-            },
-            "Metadata": {
-                "AWS::CloudFormation::Designer": {
-                    "id": "bdc4f8b7-e440-4f99-afbe-e067565e4416"
-                }
-            }
         }
     },
     "Parameters": {
@@ -236,18 +207,6 @@
     },
     "Metadata": {
         "AWS::CloudFormation::Designer": {
-            "bdc4f8b7-e440-4f99-afbe-e067565e4416": {
-                "size": {
-                    "width": 60,
-                    "height": 60
-                },
-                "position": {
-                    "x": 60,
-                    "y": 90
-                },
-                "z": 1,
-                "embeds": []
-            },
             "fbfa9c1c-dd3e-4173-a665-764376154a67": {
                 "size": {
                     "width": 60,
