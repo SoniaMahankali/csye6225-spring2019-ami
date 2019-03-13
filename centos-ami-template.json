@@ -25,7 +25,14 @@
         {
             "type": "shell",
             "inline": [
-		    "sudo yum update -y"
+              "sudo yum install -y maven",
+              "sudo yum install -y java-1.8.0-openjdk",
+              "sudo yum install -y ruby",
+              "sudo yum install -y wget",
+              "sudo wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install",
+              "sudo chmod +x ./install",
+              "sudo ./install auto",
+              "sudo service codedeploy-agent start"
 	    ]
         }
     ]
