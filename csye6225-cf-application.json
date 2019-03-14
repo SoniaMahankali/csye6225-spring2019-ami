@@ -34,6 +34,10 @@
         },
         "S3CDBucket": {
             "Type": "String"
+        },
+        "LatestAmiId": {
+            "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+            "Default": "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
         }
     },
     "Resources": {
@@ -41,7 +45,7 @@
             "Type": "AWS::EC2::Instance",
             "Properties": {
                 "ImageId": {
-                    "Ref": "ImageID"
+                    "Ref": "LatestAmiId"
                 },
                 "InstanceType": "t2.micro",
                 "KeyName": {

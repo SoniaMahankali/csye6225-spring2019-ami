@@ -29,14 +29,6 @@ then
 fi
 echo "$keyName"
 
-echo "Please enter the ImageID of centos AMI  created"
-read imageid
-if [ -z "$imageid" ]
-then
-	echo "ImageID is incorrect!"
-	exit 1
-fi
-
 echo "Please enter your domain name"
 read domain
 if [ -z "$domain" ]
@@ -45,6 +37,9 @@ then
 	exit 1
 fi
 
+DOMAIN_NAME=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
+
+domain=${DOMAIN_NAME%?}
 s3upload=$domain.csye6225.com
 s3CD=code-deploy.$domain
 VpcId=$(aws ec2 describe-vpcs --query 'Vpcs[].{VpcId:VpcId}' \
@@ -99,7 +94,7 @@ echo "Your template validation was successful!"
 
 echo "Wait while your CloudFormation Stack is being created..............."
 
-CRTSTACK_Code=`aws cloudformation create-stack --stack-name $appStackName --template-body file://./csye6225-cf-application.json --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=NetworkStackNameParameter,ParameterValue=$networkStackName ParameterKey=ApplicationStackNameParameter,ParameterValue=$appStackName ParameterKey=KeyName,ParameterValue=$keyName ParameterKey=VpcID,ParameterValue=$VpcId ParameterKey=PublicSubnetKey1,ParameterValue=$subnetid1 ParameterKey=PublicSubnetKey2,ParameterValue=$subnetid2 ParameterKey=PublicSubnetKey3,ParameterValue=$subnetid3 ParameterKey=ImageID,ParameterValue=$imageid ParameterKey=S3UploadBucket,ParameterValue=$s3upload ParameterKey=S3CDBucket,ParameterValue=$s3CD`
+CRTSTACK_Code=`aws cloudformation create-stack --stack-name $appStackName --template-body file://./csye6225-cf-application.json --capabilities CAPABILITY_NAMED_IAM --parameters ParameterKey=NetworkStackNameParameter,ParameterValue=$networkStackName ParameterKey=ApplicationStackNameParameter,ParameterValue=$appStackName ParameterKey=KeyName,ParameterValue=$keyName ParameterKey=VpcID,ParameterValue=$VpcId ParameterKey=PublicSubnetKey1,ParameterValue=$subnetid1 ParameterKey=PublicSubnetKey2,ParameterValue=$subnetid2 ParameterKey=PublicSubnetKey3,ParameterValue=$subnetid3 ParameterKey=S3UploadBucket,ParameterValue=$s3upload ParameterKey=S3CDBucket,ParameterValue=$s3CD`
 if [ -z "$CRTSTACK_Code" ]
 then
 	echo "Stack Creation is incorrect!"
