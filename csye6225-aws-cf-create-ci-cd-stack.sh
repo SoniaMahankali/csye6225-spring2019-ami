@@ -20,9 +20,9 @@ else
 fi
 
 # Domain name for ARN
-echo "Please enter your domain name"
-read domain
-CD_DOMAIN=code-deploy.$domain
+DOMAIN_NAME=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
+
+CD_DOMAIN="code-deploy."${DOMAIN_NAME%?}
 
 
 # Account id for arn
