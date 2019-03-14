@@ -14,9 +14,6 @@
             "Description": "EC2 KeyPair to enable SSH access to the instance",
             "Type": "AWS::EC2::KeyPair::KeyName"
         },
-        "ImageID": {
-            "Type": "String"
-        },
         "PublicSubnetKey3": {
             "Type": "String"
         },
@@ -34,6 +31,10 @@
         },
         "S3CDBucket": {
             "Type": "String"
+        },
+        "LatestAmiId": {
+            "Type": "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>",
+            "Default": "/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2"
         }
     },
     "Resources": {
@@ -41,7 +42,7 @@
             "Type": "AWS::EC2::Instance",
             "Properties": {
                 "ImageId": {
-                    "Ref": "ImageID"
+                    "Ref": "LatestAmiId"
                 },
                 "InstanceType": "t2.micro",
                 "KeyName": {
@@ -76,13 +77,6 @@
                             "\n",
                             [
                                 "#!/bin/bash -xe ",
-                                "sudo yum install -y maven",
-                                "sudo yum install -y java-1.8.0-openjdk",
-                                "sudo yum install -y ruby",
-                                "sudo yum install -y wget",
-                                "sudo wget https://aws-codedeploy-us-east-1.s3.amazonaws.com/latest/install",
-                                "sudo chmod +x ./install",
-                                "sudo ./install auto",
                                 "sudo service codedeploy-agent start",
                                 "sudo -s",
                                 "echo '#!/bin/bash' >> /home/centos/vars.sh",
@@ -529,48 +523,12 @@
                         {
                             "Effect": "Allow",
                             "Action": [
-                                "s3:PutAnalyticsConfiguration",
-                                "s3:PutAccelerateConfiguration",
-                                "s3:DeleteObjectVersion",
-                                "s3:ReplicateTags",
-                                "s3:RestoreObject",
-                                "s3:CreateBucket",
-                                "s3:ReplicateObject",
-                                "s3:PutEncryptionConfiguration",
-                                "s3:DeleteBucketWebsite",
-                                "s3:AbortMultipartUpload",
-                                "s3:PutBucketTagging",
-                                "s3:PutLifecycleConfiguration",
-                                "s3:PutObjectTagging",
-                                "s3:DeleteObject",
-                                "s3:DeleteBucket",
-                                "s3:PutBucketVersioning",
-                                "s3:DeleteObjectTagging",
-                                "s3:PutMetricsConfiguration",
-                                "s3:PutReplicationConfiguration",
-                                "s3:PutObjectVersionTagging",
-                                "s3:DeleteObjectVersionTagging",
-                                "s3:PutBucketCORS",
-                                "s3:PutInventoryConfiguration",
                                 "s3:PutObject",
-                                "s3:PutBucketNotification",
-                                "s3:PutBucketWebsite",
-                                "s3:PutBucketRequestPayment",
-                                "s3:PutBucketLogging",
-                                "s3:ReplicateDelete"
+                                "s3:DeleteObject",
+                                "s3:PutObjectAcl"
                             ],
                             "Resource": [
-                                {
-                                    "Fn::Join": [
-                                        "",
-                                        [
-                                            "arn:aws:s3:::",
-                                            {
-                                                "Ref": "S3UploadBucket"
-                                            }
-                                        ]
-                                    ]
-                                },
+                                
                                 {
                                     "Fn::Join": [
                                         "",
