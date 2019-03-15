@@ -37,8 +37,9 @@ then
 	exit 1
 fi
 
-echo "Please enter your domain name"
-read domain
+DOMAIN_NAME=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
+
+domain=${DOMAIN_NAME%?}
 if [ -z "$domain" ]
 then
 	echo "Domain name is incorrect!"
