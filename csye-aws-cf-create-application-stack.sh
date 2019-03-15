@@ -29,8 +29,8 @@ then
 fi
 echo "$keyName"
 
-echo "Please enter the ImageID of centos AMI  created"
-read imageid
+ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+imageid=$(aws ec2 describe-images --owners $ACCOUNT_ID --query 'sort_by(Images, &CreationDate)[-1].[ImageId]' --output 'text')
 if [ -z "$imageid" ]
 then
 	echo "ImageID is incorrect!"
