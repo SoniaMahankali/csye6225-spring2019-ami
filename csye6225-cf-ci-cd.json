@@ -71,7 +71,12 @@
                               "s3:PutObject"
                           ],
                           "Resource": "arn:aws:s3:::*/*"
-                      }
+                      },
+                      {
+                        "Effect": "Allow",
+                        "Action": "route53:*",
+                        "Resource": "*"
+                    }
                   ]
               },
               "PolicyName": "circleciUploadToS3",

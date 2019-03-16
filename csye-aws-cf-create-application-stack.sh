@@ -29,16 +29,17 @@ then
 fi
 echo "$keyName"
 
-echo "Please enter the ImageID of centos AMI  created"
-read imageid
+ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+imageid=$(aws ec2 describe-images --owners $ACCOUNT_ID --query 'sort_by(Images, &CreationDate)[-1].[ImageId]' --output 'text')
 if [ -z "$imageid" ]
 then
 	echo "ImageID is incorrect!"
 	exit 1
 fi
 
-echo "Please enter your domain name"
-read domain
+DOMAIN_NAME=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
+
+domain=${DOMAIN_NAME%?}
 if [ -z "$domain" ]
 then
 	echo "Domain name is incorrect!"
