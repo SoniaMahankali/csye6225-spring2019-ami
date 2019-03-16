@@ -5,7 +5,6 @@ then
 	echo "StackName is incorrect!"
 	exit 1
 fi
-echo "$networkStackName"
 
 
 
@@ -16,7 +15,6 @@ then
 	echo "StackName is incorrect!"
 	exit 1
 fi
-echo "$appStackName"
 
 
 
@@ -27,16 +25,15 @@ then
 	echo "StackName is incorrect!"
 	exit 1
 fi
-echo "$keyName"
 
-echo "Please enter the ImageID of centos AMI  created"
-read imageid
+imageid=$(aws ec2 describe-images --owners self --filter "Name=name,Values=csye6225_*" --output json | jq -r '.Images | sort_by(.CreationDate)[length-1].ImageId')
 if [ -z "$imageid" ]
 then
 	echo "ImageID is incorrect!"
 	exit 1
 fi
 
+echo "Imageid being used is: $imageid"
 DOMAIN_NAME=$(aws route53 list-hosted-zones --query HostedZones[0].Name --output text)
 
 domain=${DOMAIN_NAME%?}
