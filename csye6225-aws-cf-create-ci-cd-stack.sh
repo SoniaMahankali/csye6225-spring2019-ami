@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Please enter Application Stack Name:"
+echo "Please enter CircleCI Stack Name:"
 read appStackName
 if [ -z "$appStackName" ]
 then
@@ -29,10 +29,10 @@ CD_DOMAIN="code-deploy."${DOMAIN_NAME%?}
 echo "Fetching user's account id"
 ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 
-RC=$(aws cloudformation create-stack --stack-name $appStackName-ci-cd --capabilities "CAPABILITY_NAMED_IAM" --template-body file://./csye6225-cf-ci-cd.json --parameters ParameterKey=CDARN,ParameterValue=arn:aws:s3:::$CD_DOMAIN/* ParameterKey=CDAPPNAME,ParameterValue=csye6225-webapp)
+RC=$(aws cloudformation create-stack --stack-name $appStackName --capabilities "CAPABILITY_NAMED_IAM" --template-body file://./csye6225-cf-ci-cd.json --parameters ParameterKey=CDARN,ParameterValue=arn:aws:s3:::$CD_DOMAIN/* ParameterKey=CDAPPNAME,ParameterValue=csye6225-webapp)
 
 echo "CI stack creation in progress. Please wait"
-aws cloudformation wait stack-create-complete --stack-name $appStackName-ci-cd
-STACKDETAILS=$(aws cloudformation describe-stacks --stack-name $appStackName-ci-cd --query Stacks[0].StackId --output text)
+aws cloudformation wait stack-create-complete --stack-name $appStackName
+STACKDETAILS=$(aws cloudformation describe-stacks --stack-name $appStackName --query Stacks[0].StackId --output text)
 echo "CI stack creation complete"
 echo "CI Stack id: $STACKDETAILS"

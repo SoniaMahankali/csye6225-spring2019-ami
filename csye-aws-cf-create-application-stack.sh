@@ -26,7 +26,10 @@ then
 	exit 1
 fi
 
-imageid=$(aws ec2 describe-images --owners self --filter "Name=name,Values=csye6225_*" --output json | jq -r '.Images | sort_by(.CreationDate)[length-1].ImageId')
+
+ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
+imageid=$(aws ec2 describe-images --owners $ACCOUNT_ID --query 'sort_by(Images, &CreationDate)[-1].[ImageId]' --output 'text')
+
 if [ -z "$imageid" ]
 then
 	echo "ImageID is incorrect!"
